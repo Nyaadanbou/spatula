@@ -14,11 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.jetbrains.annotations.NotNull;
 
+@Singleton
 public class CommandRegistry<P extends Plugin> extends PaperCommandManager<CommandSender> {
     private final List<Command<CommandSender>> preparedCommands;
 
+    @Inject
     public CommandRegistry(@NotNull P plugin) throws Exception {
         super(
                 plugin,
@@ -33,9 +38,7 @@ public class CommandRegistry<P extends Plugin> extends PaperCommandManager<Comma
         if (hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             registerBrigadier();
             CloudBrigadierManager<CommandSender, ?> brigManager = brigadierManager();
-            if (brigManager != null) {
-                brigManager.setNativeNumberSuggestions(false);
-            }
+            if (brigManager != null) brigManager.setNativeNumberSuggestions(false);
             plugin.getLogger().info("Successfully registered Mojang Brigadier support for commands");
         }
 
