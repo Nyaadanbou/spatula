@@ -46,6 +46,9 @@ public class CommandRegistry<P extends Plugin> extends PaperCommandManager<Comma
         new MinecraftExceptionHandler<CommandSender>()
                 .withDefaultHandlers()
                 .apply(this, sender -> AudienceProvider.nativeAudience().apply(sender));
+
+        // Make the command instances "reloadable"
+        setSetting(ManagerSettings.OVERRIDE_EXISTING_COMMANDS, true);
     }
 
     /**
