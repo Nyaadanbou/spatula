@@ -12,26 +12,30 @@ import org.jetbrains.annotations.NotNull;
  * This class makes it easier to prepare and register simple commands.
  */
 @Singleton
-public abstract class SimpleCommands<P extends Plugin> {
-    protected final @NotNull P plugin;
-    protected final @NotNull CommandRegistry<P> registry;
+public abstract class SimpleCommands {
+    private final @NotNull CommandRegistry registry;
 
     @Inject
-    public SimpleCommands(final @NotNull P plugin) throws Exception {
-        this.plugin = plugin;
-        this.registry = new CommandRegistry<>(plugin);
+    public SimpleCommands(final @NotNull Plugin plugin) throws Exception {
+        this.registry = new CommandRegistry(plugin);
     }
 
     /**
-     * Implementation Notes:
+     * Gets the backed command registry.
+     *
+     * @return the backed command registry
+     */
+    public @NotNull CommandRegistry commandRegistry() {
+        return registry;
+    }
+
+    /**
+     * To implement this method, you may use {@link CommandRegistry#addCommand(Command)} to add commands
+     * and {@link CommandRegistry#registerCommands()} to register all the added commands in this method.
      * <p>
-     * You may use {@link CommandRegistry#prepareCommand(Command)} to prepare commands
-     * and {@link CommandRegistry#registerCommands()} to register all prepared commands
-     * in this method.
+     * This method is intended to be called upon plugin enabling to register commands with ease!
      * <p>
-     * This method then can be called upon plugin enabling to register commands with ease!
-     * <p>
-     * Expected usage:
+     * Example usage:
      * <pre>{@code
      *     public void prepareAndRegister() {
      *         // Prepare commands
@@ -47,5 +51,5 @@ public abstract class SimpleCommands<P extends Plugin> {
      *     }
      * }</pre>
      */
-    public abstract void prepareAndRegister();
+    public abstract void registerCommands();
 }

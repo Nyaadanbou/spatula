@@ -12,7 +12,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,21 +20,24 @@ import javax.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 
 @Singleton
-public class CommandRegistry<P extends Plugin> extends PaperCommandManager<CommandSender> {
-    private final List<Command<CommandSender>> preparedCommands;
+public class CommandRegistry extends PaperCommandManager<CommandSender> {
+    /**
+     * Commands to be registered in the tree.
+     */
+    private final List<Command<CommandSender>> storedCommands;
 
     @Inject
-    public CommandRegistry(@NotNull P plugin) throws Exception {
+    public CommandRegistry(@NotNull Plugin plugin) throws Exception {
         super(
                 plugin,
                 CommandExecutionCoordinator.simpleCoordinator(),
-                Function.identity(),
-                Function.identity()
+                UnaryOperator.identity(),
+                UnaryOperator.identity()
         );
 
-        this.preparedCommands = new ArrayList<>();
+        this.storedCommands = new ArrayList<>();
 
-        // ---- Register Brigadier ----
+        // Register Brigadier
         if (hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             registerBrigadier();
             CloudBrigadierManager<CommandSender, ?> brigManager = brigadierManager();
@@ -42,33 +45,45 @@ public class CommandRegistry<P extends Plugin> extends PaperCommandManager<Comma
             plugin.getLogger().info("Successfully registered Mojang Brigadier support for commands");
         }
 
-        // ---- Setup exception messages ----
+        // Setup exception handler
         new MinecraftExceptionHandler<CommandSender>()
                 .withDefaultHandlers()
-                .apply(this, sender -> AudienceProvider.nativeAudience().apply(sender));
+                .apply(this, AudienceProvider.nativeAudience()::apply);
 
         // Make the command instances "reloadable"
         setSetting(ManagerSettings.OVERRIDE_EXISTING_COMMANDS, true);
     }
 
     /**
-     * Prepares given command.
+     * Adds the specific command.
      * <p>
-     * Prepared commands will become effective after {@link #registerCommands()} is called.
+     * Adding a command is not registering it.
+     * Added commands will not be effective until {@link #registerCommands()} is called.
      *
-     * @param command the command to be prepared
+     * @param command the command to be added
      */
-    public final void prepareCommand(final @NotNull Command<CommandSender> command) {
-        this.preparedCommands.add(command);
+    public final void addCommand(final @NotNull Command<CommandSender> command) {
+        storedCommands.add(command);
     }
 
     /**
-     * Registers all added commands.
+     * Adds many commands at once. See {@link #addCommand(Command)} for more details.
+     *
+     * @param command the command to be added
+     */
+    public final void addCommand(final @NotNull Iterable<Command<CommandSender>> command) {
+        for (final Command<CommandSender> one : command) {
+            storedCommands.add(one);
+        }
+    }
+
+    /**
+     * Registers all added commands to the tree.
      * <p>
-     * This method will make the prepared commands effective.
+     * This method will make the added commands effective.
      */
     public final void registerCommands() {
-        for (final Command<CommandSender> added : this.preparedCommands) {
+        for (final Command<CommandSender> added : storedCommands) {
             command(added);
         }
     }
