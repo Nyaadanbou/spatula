@@ -37,9 +37,9 @@ public abstract class SimpleCommands {
      * <p>
      * Example usage:
      * <pre>{@code
-     *     public void prepareAndRegister() {
+     *     public void registerCommands() {
      *         // Prepare commands
-     *         registry.prepareCommand(registry
+     *         commandRegistry().addCommand(commandRegistry()
      *             .commandBuilder("home")
      *             .senderType(Player.class)
      *             .handler(ctx -> {
@@ -47,7 +47,7 @@ public abstract class SimpleCommands {
      *             }).build());
      *
      *         // Register commands
-     *         registry.registerCommands();
+     *         commandRegistry().registerCommands();
      *     }
      * }</pre>
      */
