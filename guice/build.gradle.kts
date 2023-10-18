@@ -7,4 +7,7 @@ dependencies {
     api(libs.guice) {
         exclude("com.google.guava") // already included by paper server
     }
+    api(libs.guice.assistedinject) {
+        exclude("com.google.guava") // already included by paper server
+    }
 }
