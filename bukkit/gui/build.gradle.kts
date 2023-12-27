@@ -8,4 +8,6 @@ dependencies {
         exclude("org.jetbrains") // already included by our setup
         exclude("org.jetbrains.kotlin") // the kotlin is outdated for us
     }
+
+    compileOnly(libs.server.paper)
 }

@@ -28,7 +28,7 @@ paper {
     apiVersion = "1.19"
     authors = listOf("Nailm")
     serverDependencies {
-        register("Kotlin") {
+        register("helper") {
             required = true
             joinClasspath = true
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
