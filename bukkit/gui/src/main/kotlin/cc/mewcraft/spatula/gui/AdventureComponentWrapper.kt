@@ -1,3 +1,5 @@
+package cc.mewcraft.spatula.gui
+
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer

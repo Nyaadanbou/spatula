@@ -1,3 +1,5 @@
+package cc.mewcraft.spatula.gui
+
 import net.kyori.adventure.text.Component
 import xyz.xenondevs.invui.item.builder.AbstractItemBuilder
 
