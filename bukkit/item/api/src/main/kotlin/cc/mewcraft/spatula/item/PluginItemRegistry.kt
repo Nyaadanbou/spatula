@@ -63,9 +63,6 @@ object PluginItemRegistry {
             this._pluginId = pluginId
             this._itemId = itemId
         }
-        if (pluginItem == null) {
-            logger.error("Unsupported item with id `$itemId` from plugin `$pluginId`.")
-        }
         return pluginItem
     }
 
@@ -74,10 +71,7 @@ object PluginItemRegistry {
      */
     fun byReferenceOrNull(reference: String): PluginItem<*>? {
         with(reference.split(':', limit = 2).toTypedArray()) {
-            if (size != 2) {
-                logger.error("Illegal reference: `$reference`")
-                return null
-            }
+            if (size != 2) return null
             return byReferenceOrNull(this[0], this[1])
         }
     }
