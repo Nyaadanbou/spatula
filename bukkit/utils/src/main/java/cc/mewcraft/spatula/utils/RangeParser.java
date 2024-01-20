@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RangeParser {
-    private static final Pattern INTERVAL_PATTERN = Pattern.compile("([\\[\\(])(-?∞?\\d*)(?:\\,|\\.\\.)(-?∞?\\d*)([\\]\\)])");
+    private static final Pattern INTERVAL_PATTERN = Pattern.compile("([\\[(])(-?∞?\\d*)(?:,|\\.\\.)(-?∞?\\d*)([])])");
 
     /**
      * Parses integer ranges of format (2,5], (2..5], (2,), [2..), [2..∞), [2,∞)
